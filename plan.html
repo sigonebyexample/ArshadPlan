@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>200-Day Study Plan - University Schedule</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .summary-card p {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: var(--light);
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .schedule-day {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .schedule-day:last-child {
+            border-bottom: none;
+        }
+        
+        .day-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .day-title span {
+            margin-left: 10px;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            font-weight: normal;
+        }
+        
+        .time-slot {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .time {
+            width: 120px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .subject {
+            flex: 1;
+            padding: 10px 15px;
+            background-color: var(--light);
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .subject-name {
+            font-weight: 500;
+        }
+        
+        .subject-duration {
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        .progress-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .progress-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .progress-item {
+            margin-bottom: 15px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .extra-time {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .extra-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .extra-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .extra-option {
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .extra-option:hover {
+            background-color: #d6dbdf;
+        }
+        
+        .extra-option.selected {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .notes {
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .notes h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .time-slot {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .time {
+                margin-bottom: 5px;
+                width: 100%;
+            }
+            
+            .subject {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>200-Day Study Plan</h1>
+            <p class="subtitle">University Schedule: Saturday to Tuesday (7:00-19:00) | Exam Date: 17 Ordibehesht</p>
+        </header>
+        
+        <div class="summary">
+            <div class="summary-card">
+                <h3>Total Study Days</h3>
+                <p>200 Days</p>
+            </div>
+            <div class="summary-card">
+                <h3>Weekly Study Hours</h3>
+                <p>48 Hours</p>
+            </div>
+            <div class="summary-card">
+                <h3>University Days</h3>
+                <p>4 Days/Week</p>
+            </div>
+            <div class="summary-card">
+                <h3>Free Days</h3>
+                <p>3 Days/Week</p>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="university-days">University Days (Sat-Tue)</div>
+            <div class="tab" data-tab="free-days">Free Days (Wed-Fri)</div>
+            <div class="tab" data-tab="progress">Progress Tracking</div>
+        </div>
+        
+        <div class="tab-content active" id="university-days">
+            <h2>University Days Schedule (Saturday to Tuesday)</h2>
+            <p>Limited study time due to university commitments (7:00-19:00)</p>
+            
+            <div class="schedule-day">
+                <div class="day-title">Evening Study Session <span>3 hours total</span></div>
+                
+                <div class="time-slot">
+                    <div class="time">19:30 - 20:30</div>
+                    <div class="subject">
+                        <span class="subject-name">Technical English</span>
+                        <span class="subject-duration">1 hour</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">20:45 - 21:30</div>
+                    <div class="subject">
+                        <span class="subject-name">Digital Logic</span>
+                        <span class="subject-duration">45 minutes</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">21:45 - 23:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Formula Review & Planning</span>
+                        <span class="subject-duration">1 hour 15 minutes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="schedule-day">
+                <div class="day-title">University Break Optimization</div>
+                
+                <div class="time-slot">
+                    <div class="time">Between Classes</div>
+                    <div class="subject">
+                        <span class="subject-name">Flashcards & Quick Reviews</span>
+                        <span class="subject-duration">15-30 minutes</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">Lunch Break</div>
+                    <div class="subject">
+                        <span class="subject-name">English Vocabulary & Concepts</span>
+                        <span class="subject-duration">30-45 minutes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="free-days">
+            <h2>Free Days Intensive Schedule (Wednesday to Friday)</h2>
+            <p>Full-day study sessions to maximize progress</p>
+            
+            <div class="schedule-day">
+                <div class="day-title">Wednesday <span>12 hours total</span></div>
+                
+                <div class="time-slot">
+                    <div class="time">7:00 - 9:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Electronics 1</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">9:15 - 11:15</div>
+                    <div class="subject">
+                        <span class="subject-name">Electronics 2</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">11:30 - 13:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Practice Session</span>
+                        <span class="subject-duration">1.5 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">14:00 - 16:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Electrical Circuits</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">16:15 - 18:15</div>
+                    <div class="subject">
+                        <span class="subject-name">Control Systems</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">19:00 - 20:30</div>
+                    <div class="subject">
+                        <span class="subject-name">Engineering Mathematics</span>
+                        <span class="subject-duration">1.5 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">20:45 - 22:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Daily Review & Planning</span>
+                        <span class="subject-duration">1.25 hours</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="schedule-day">
+                <div class="day-title">Thursday <span>12 hours total</span></div>
+                
+                <div class="time-slot">
+                    <div class="time">7:00 - 9:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Differential Equations</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">9:15 - 11:15</div>
+                    <div class="subject">
+                        <span class="subject-name">Electrical Machines</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">11:30 - 13:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Mock Test</span>
+                        <span class="subject-duration">1.5 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">14:00 - 16:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Test Analysis</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">16:15 - 18:15</div>
+                    <div class="subject">
+                        <span class="subject-name">Weak Areas Focus</span>
+                        <span class="subject-duration">2 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">19:00 - 20:30</div>
+                    <div class="subject">
+                        <span class="subject-name">All Subjects Review</span>
+                        <span class="subject-duration">1.5 hours</span>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time">20:45 - 22:00</div>
+                    <div class="subject">
+                        <span class="subject-name">Planning & English</span>
+                        <span class="subject-duration">1.25 hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="progress">
+            <div class="progress-section">
+                <h2 class="progress-title">Study Progress Tracking</h2>
+                
+                <div class="progress-grid">
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Electronics 1</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Electronics 2</span>
+                            <span>30%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Electrical Circuits</span>
+                            <span>50%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Control Systems</span>
+                            <span>35%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 35%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Engineering Mathematics</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Differential Equations</span>
+                            <span>40%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Electrical Machines</span>
+                            <span>25%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Digital Logic</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Technical English</span>
+                            <span>55%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 55%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="extra-time">
+                <h2 class="extra-title">Extra Time Allocation</h2>
+                <p>Select where to allocate additional study time when available:</p>
+                
+                <div class="extra-options">
+                    <div class="extra-option selected">University Projects</div>
+                    <div class="extra-option">New Learning Topics</div>
+                    <div class="extra-option">Weak Areas Focus</div>
+                    <div class="extra-option">Mock Tests & Practice</div>
+                    <div class="extra-option">Review & Revision</div>
+                    <div class="extra-option">English Improvement</div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <label for="extra-hours">Additional Hours Available:</label>
+                    <select id="extra-hours" style="margin-left: 10px; padding: 5px 10px; border-radius: 4px; border: 1px solid #ddd;">
+                        <option value="1">1 hour</option>
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4">4+ hours</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="notes">
+            <h2>Weekly Notes & Adjustments</h2>
+            <textarea placeholder="Record any changes to the schedule, additional topics covered, or notes about your progress..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Extra time selection
+        document.querySelectorAll('.extra-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.extra-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>
